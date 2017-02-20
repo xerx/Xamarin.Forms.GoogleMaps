@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
 using System.Reflection;
+using PCLStorage;
+using System.IO;
+using System.Diagnostics;
 
 namespace XFGoogleMapSample
 {
@@ -140,6 +143,29 @@ namespace XFGoogleMapSample
             map.Pins.Add(_pinTokyo);
             map.SelectedPin = _pinTokyo;
             map.MoveToRegion(MapSpan.FromCenterAndRadius(_pinTokyo.Position, Distance.FromMeters(5000)), true);
+
+
+            // Copy png to device local directory
+            CopyXamagonToDeviceLocal();
+        }
+
+        async void CopyXamagonToDeviceLocal()
+        {
+            var assembly = typeof(CustomPinsPage).GetTypeInfo().Assembly;
+            var file = buttonPinStream.Items[buttonPinStream.SelectedIndex];
+            var stream = assembly.GetManifestResourceStream($"XFGoogleMapSample.xamagon.png");
+            using (var reader = new BinaryReader(stream))
+            {
+                var folder = FileSystem.Current.LocalStorage;
+                Debug.WriteLine($"LocalPath = {folder.Path}");
+                var outFile = await folder.CreateFileAsync($"xamagon.png", CreationCollisionOption.ReplaceExisting);
+                using (var outStream = await outFile.OpenAsync(FileAccess.ReadAndWrite))
+                {
+                    // Copy png to device local directory
+                    var writer = new BinaryWriter(outStream);
+                    writer.Write(reader.ReadBytes((int)stream.Length));
+                }
+            }
         }
 
         private string PrintPin(Pin pin)
@@ -152,7 +178,7 @@ namespace XFGoogleMapSample
             base.OnAppearing();
         }
 
-        void UpdatePinIcon()
+        async void UpdatePinIcon()
         {
             if (switchPinColor.IsToggled)
             {
@@ -164,10 +190,11 @@ namespace XFGoogleMapSample
             }
             else if (switchPinStream.IsToggled)
             {
-                var assembly = typeof(CustomPinsPage).GetTypeInfo().Assembly;
-                var file = buttonPinStream.Items[buttonPinStream.SelectedIndex];
-                var stream = assembly.GetManifestResourceStream($"XFGoogleMapSample.{file}");
-                _pinTokyo.Icon = BitmapDescriptorFactory.FromStream(stream);
+                // Read png from device local file
+                var folder = FileSystem.Current.LocalStorage;
+                var pngFile = await folder.GetFileAsync($"xamagon.png");
+                var pngStream = await pngFile.OpenAsync(FileAccess.Read);
+                _pinTokyo.Icon = BitmapDescriptorFactory.FromStream(pngStream);
             }
         }
    }

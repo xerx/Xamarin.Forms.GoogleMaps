@@ -27,6 +27,8 @@ namespace XFGoogleMapSample.Droid
         public static void UpdateIdValues()
         {
             global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::XFGoogleMapSample.Droid.Resource.Attribute.actionBarSize;
+            global::PCLStorage.Resource.String.ApplicationName = global::XFGoogleMapSample.Droid.Resource.String.ApplicationName;
+            global::PCLStorage.Resource.String.Hello = global::XFGoogleMapSample.Droid.Resource.String.Hello;
         }
         
         public partial class Animation
@@ -3233,6 +3235,12 @@ namespace XFGoogleMapSample.Droid
         
         public partial class String
         {
+            
+            // aapt resource value: 0x7f070046
+            public const int ApplicationName = 2131165254;
+            
+            // aapt resource value: 0x7f070045
+            public const int Hello = 2131165253;
             
             // aapt resource value: 0x7f070031
             public const int abc_action_bar_home_description = 2131165233;

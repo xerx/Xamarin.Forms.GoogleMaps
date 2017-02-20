@@ -92,6 +92,12 @@
     <Reference Include="Xamarin.GooglePlayServices.Maps">
       <HintPath>$(SolutionDir)\packages\Xamarin.GooglePlayServices.Maps.29.0.0.1\lib\MonoAndroid41\Xamarin.GooglePlayServices.Maps.dll</HintPath>
     </Reference>
+    <Reference Include="PCLStorage.Abstractions">
+      <HintPath>..\..\Xamarin.Forms.GoogleMaps\packages\PCLStorage.1.0.2\lib\monoandroid\PCLStorage.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="PCLStorage">
+      <HintPath>..\..\Xamarin.Forms.GoogleMaps\packages\PCLStorage.1.0.2\lib\monoandroid\PCLStorage.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XFGoogleMapSample\XFGoogleMapSample.local.csproj">
