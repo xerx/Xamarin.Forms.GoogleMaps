@@ -104,9 +104,20 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 
         Pin LookupPin(Marker marker)
         {
-            return GetItems(Map).FirstOrDefault(outerItem => ReferenceEquals(outerItem.NativeObject, marker));
-        }
+            Pin pin = GetItems(Map).FirstOrDefault(outerItem => ReferenceEquals(outerItem.NativeObject, marker));
+            if (pin != null) { return pin; }
+            //xerx --> search in clustered pins too
+            foreach (var p in Map.ClusteredPins)
+            {
+                if ((p.Position.Latitude == marker.Position.Latitude) &&
+                   (p.Position.Longitude == marker.Position.Longitude))
+                {
+                    return p;
+                }
+            }
 
+            return null;
+        }
         void OnInfoTapped(object sender, GMSMarkerEventEventArgs e)
         {
             // lookup pin
@@ -126,7 +137,7 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
         {
             // lookup pin
             var targetPin = LookupPin(e.Marker);
-            
+
             if (targetPin != null)
             {
                 Map.SendInfoWindowClicked(targetPin);
@@ -135,6 +146,7 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 
         bool HandleGMSTappedMarker(MapView mapView, Marker marker)
         {
+            if (MarkerIsClustered(marker)) { return false; }
             // lookup pin
             var targetPin = LookupPin(marker);
 
@@ -155,10 +167,13 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
             {
                 _onMarkerEvent = false;
             }
-
             return false;
         }
-
+        private bool MarkerIsClustered(Marker marker)
+        {
+            //xerx --> if marker has icon then it is clustered
+            return marker.Icon != null;
+        }
         void InfoWindowClosed(object sender, GMSMarkerEventEventArgs e)
         {
             // lookup pin
