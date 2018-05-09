@@ -180,6 +180,7 @@ namespace Xamarin.Forms.GoogleMaps.Logics.Android
 			}
 			else
 			{
+                nativeItem.Icon = outerItem.Icon.ToBitmapDescriptor();
 				//nativeItem.SetIcon(outerItem?.Icon?.ToBitmapDescriptor() ?? NativeBitmapDescriptorFactory.DefaultMarker());
 				//nativeItem.SetAnchor(0.5f, 1f);
 				//nativeItem.SetInfoWindowAnchor(0.5f, 0f);

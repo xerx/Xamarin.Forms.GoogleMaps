@@ -8,6 +8,7 @@ using System.Linq;
 using Xamarin.Forms.GoogleMaps.Internals;
 using System.Threading.Tasks;
 using Xamarin.Forms.GoogleMaps.Extensions;
+using System.Diagnostics;
 
 namespace Xamarin.Forms.GoogleMaps
 {

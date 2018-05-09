@@ -13,6 +13,7 @@ using GCameraPosition = Google.Maps.CameraPosition;
 using System.Threading.Tasks;
 using Foundation;
 using GMCluster;
+using System.Diagnostics;
 
 namespace Xamarin.Forms.GoogleMaps.iOS
 {
@@ -146,6 +147,8 @@ namespace Xamarin.Forms.GoogleMaps.iOS
             }
         }
 
+        
+
         protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.OnElementPropertyChanged(sender, e);
@@ -155,7 +158,6 @@ namespace Xamarin.Forms.GoogleMaps.iOS
             {
                 return;
             }
-
             var mapModel = (Map)Element;
 
             if (e.PropertyName == Map.MapTypeProperty.PropertyName)

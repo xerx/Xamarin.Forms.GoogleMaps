@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using CoreGraphics;
 using Google.Maps;
@@ -15,7 +16,6 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
         private bool _onMarkerEvent;
         private Pin _draggingPin;
         private volatile bool _withoutUpdateNative = false;
-
         internal override void Register(MapView oldNativeMap, Map oldMap, MapView newNativeMap, Map newMap)
         {
             base.Register(oldNativeMap, oldMap, newNativeMap, newMap);
@@ -29,9 +29,11 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
                 newNativeMap.DraggingMarkerStarted += DraggingMarkerStarted;
                 newNativeMap.DraggingMarkerEnded += DraggingMarkerEnded;
                 newNativeMap.DraggingMarker += DraggingMarker;
+                newNativeMap.CoordinateTapped += CoordinateTapped;
             }
 
         }
+
 
         internal override void Unregister(MapView nativeMap, Map map)
         {
@@ -44,11 +46,16 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
                 nativeMap.TappedMarker = null;
                 nativeMap.InfoTapped -= OnInfoTapped;
                 nativeMap.InfoLongPressed -= OnInfoLongPressed;
+                nativeMap.CoordinateTapped -= CoordinateTapped;
             }
 
             base.Unregister(nativeMap, map);
         }
 
+        private void CoordinateTapped(object sender, GMSCoordEventArgs e)
+        {
+            Map.SendMapClicked(e.Coordinate.ToPosition());
+        }
         protected override Marker CreateNativeItem(Pin outerItem)
         {
             var nativeMarker = Marker.FromPosition(outerItem.Position.ToCoord());
@@ -69,7 +76,6 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
             nativeMarker.Map = outerItem.IsVisible ? NativeMap : null;
 
             OnUpdateIconView(outerItem, nativeMarker);
-
             return nativeMarker;
         }
 
@@ -77,7 +83,7 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
         {
             var nativeMarker = outerItem.NativeObject as Marker;
             nativeMarker.Map = null;
-
+            
             if (ReferenceEquals(Map.SelectedPin, outerItem))
                 Map.SelectedPin = null;
 
@@ -146,10 +152,10 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 
         bool HandleGMSTappedMarker(MapView mapView, Marker marker)
         {
-            if (MarkerIsClustered(marker)) { return false; }
+            //if (MarkerIsClustered(marker)) { return false; }
             // lookup pin
             var targetPin = LookupPin(marker);
-
+            
             // If set to PinClickedEventArgs.Handled = true in app codes,
             // then all pin selection controlling by app.
             if (Map.SendPinClicked(targetPin))

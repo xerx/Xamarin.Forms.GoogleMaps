@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using CoreAnimation;
 using CoreGraphics;
@@ -112,15 +113,15 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 			nativeMarker.Snippet = outerItem.Address ?? string.Empty;
 			nativeMarker.Draggable = outerItem.IsDraggable;
 			nativeMarker.Rotation = outerItem.Rotation;
-			nativeMarker.GroundAnchor = new CGPoint(outerItem.Anchor.X, outerItem.Anchor.Y);
-			nativeMarker.Flat = outerItem.Flat;
+            //nativeMarker.GroundAnchor = new CGPoint(outerItem.Anchor.X, outerItem.Anchor.Y);
+            nativeMarker.GroundAnchor = new CGPoint(0.5d, 1.0d);
+            nativeMarker.Flat = outerItem.Flat;
 
 			if (outerItem.Icon != null)
 			{
 				nativeMarker.Icon = outerItem.Icon.ToUIImage();
-			}
-
-			outerItem.NativeObject = nativeMarker;
+            }
+            outerItem.NativeObject = nativeMarker;
 
 			// When using clustering, we don't set the pin directly.
 			//nativeMarker.Map = outerItem.IsVisible ? NativeMap : null;
@@ -323,8 +324,9 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 					var iconView = outerItem.Icon.View;
 					var nativeView = Utils.ConvertFormsToNative(iconView, new CGRect(0, 0, iconView.WidthRequest, iconView.HeightRequest));
 					nativeView.BackgroundColor = UIColor.Clear;
-					nativeItem.GroundAnchor = new CGPoint(iconView.AnchorX, iconView.AnchorY);
-					nativeItem.Icon = Utils.ConvertViewToImage(nativeView);
+					//nativeItem.GroundAnchor = new CGPoint(iconView.AnchorX, iconView.AnchorY); 
+					nativeItem.GroundAnchor = new CGPoint(0.5d, 1.0d);
+                    nativeItem.Icon = Utils.ConvertViewToImage(nativeView);
 
 					// Would have been way cooler to do this instead, but surprisingly, we can't do this on Android:
 					// nativeItem.IconView = nativeView;
@@ -353,8 +355,9 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 
 		protected override void OnUpdateAnchor(Pin outerItem, ClusteredMarker nativeItem)
 		{
-			nativeItem.GroundAnchor = new CGPoint(outerItem.Anchor.X, outerItem.Anchor.Y);
-		}
+			//nativeItem.GroundAnchor = new CGPoint(outerItem.Anchor.X, outerItem.Anchor.Y); 
+			nativeItem.GroundAnchor = new CGPoint(0.5d, 1.0d);
+        }
 
 		protected override void OnUpdateFlat(Pin outerItem, ClusteredMarker nativeItem)
 		{
@@ -412,7 +415,8 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 					marker.Snippet = clusteredMarker.Snippet;
 					marker.Draggable = clusteredMarker.Draggable;
 					marker.Rotation = clusteredMarker.Rotation;
-					marker.GroundAnchor = clusteredMarker.GroundAnchor;
+					//marker.GroundAnchor = clusteredMarker.GroundAnchor;
+					marker.GroundAnchor = new CGPoint(0.5d, 1.0d);
 					marker.Flat = clusteredMarker.Flat;
 				}
 				else
@@ -420,8 +424,9 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 					/* A group */
 					marker = Marker.FromPosition(initialPosition);
 					marker.Icon = clusterIcon;
-					marker.GroundAnchor = new CGPoint(0.5, 0.5);
-				}
+					//marker.GroundAnchor = new CGPoint(0.5d, 1.0d);
+					marker.GroundAnchor = new CGPoint(0.5d, 1.0d);
+                }
 
 				/* Misc */
 				marker.ZIndex = 1;
