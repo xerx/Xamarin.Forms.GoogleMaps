@@ -40,7 +40,7 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 
 			/* Delegate */
 			this._clusterDelegate = new GMUClusterDelegateHandler(this);
-
+            
 			/* Algorithm */
 			IGMUClusterAlgorithm algorithm;
 			switch (newMap.ClusterOptions.Algorithm)
@@ -127,7 +127,6 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 			//nativeMarker.Map = outerItem.IsVisible ? NativeMap : null;
 
 			this._clusterManager.AddItem(nativeMarker);
-
 			OnUpdateIconView(outerItem, nativeMarker);
 
 			return nativeMarker;
@@ -137,11 +136,12 @@ namespace Xamarin.Forms.GoogleMaps.Logics.iOS
 		{
 			var nativeMarker = outerItem.NativeObject as ClusteredMarker;
 			nativeMarker.Map = null;
+            this._clusterManager.RemoveItem(nativeMarker);
 
-			if (ReferenceEquals(Map.SelectedPin, outerItem))
+            if (ReferenceEquals(Map.SelectedPin, outerItem))
 				Map.SelectedPin = null;
 
-			return nativeMarker;
+            return nativeMarker;
 		}
 
 		internal override void OnMapPropertyChanged(PropertyChangedEventArgs e)
